@@ -1,0 +1,19 @@
+# Render Blueprint: New > Blueprint > pick this repo. Creates the API service.
+# You will be asked for the values marked `sync: false`.
+services:
+  - type: web
+    name: routewise-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: DJANGO_SECRET_KEY
+        generateValue: true          # Render generates a random secret; DEBUG is then off
+      - key: ORS_API_KEY
+        sync: false                  # your OpenRouteService key (truck routing)
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false                  # your Vercel URL, e.g. https://routewise.vercel.app
